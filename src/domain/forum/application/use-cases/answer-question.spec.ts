@@ -11,13 +11,13 @@ let answerUseCase: AnswerQuestionUseCase
     })
 
     it('should be able to create an answer', async () => {
-    const { answer }= await answerUseCase.execute({
+    const result = await answerUseCase.execute({
       questionId: '1',
       instructorId: '1',
       content: 'new content'
     })
 
-    expect(answer.id).toBeTruthy()
-    expect(answerRepository.items[0]?.id).toEqual(answer.id)
+    expect(result.isRight()).toBe(true)
+    expect(answerRepository.items[0]).toEqual(result.value?.answer)
   })
 })

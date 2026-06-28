@@ -23,12 +23,12 @@ describe('List AnswerComment of Answer', () => {
         answerId: new UniqueEntityID('1')
     }))
 
-    const { answerComments } = await listAnswerCommentsUseCase.execute({
+    const result = await listAnswerCommentsUseCase.execute({
       answerId: '1',
       page: 1
     })
 
-    expect(answerComments).toHaveLength(3)
+    expect(result.value?.answerComments).toHaveLength(3)
   })
 
   it('should be able to fetch paginated answer comments', async () => {
@@ -38,11 +38,11 @@ describe('List AnswerComment of Answer', () => {
       }))
     }
 
-    const { answerComments } = await listAnswerCommentsUseCase.execute({
+    const result = await listAnswerCommentsUseCase.execute({
       answerId: '1',
       page: 2
     })
 
-    expect(answerComments).toHaveLength(2)
+    expect(result.value?.answerComments).toHaveLength(2)
   })
 })

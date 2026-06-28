@@ -1,3 +1,4 @@
+import { right, type Either } from "@/core/either";
 import type { AnswerComment } from "../../enterprise/entities/answer-comment";
 import type { AnswerCommentRepository } from "../repositories/answer-comment-repository";
 
@@ -6,10 +7,12 @@ interface ListAnswerCommentsUseCaseRequest {
   answerId: string
   page: number
 }
-
-interface ListAnswerCommentsUseCaseResponse {
-  answerComments: AnswerComment[] 
-}
+type ListAnswerCommentsUseCaseResponse = Either<
+  null,
+  {
+    answerComments: AnswerComment[] 
+  }
+>
 
 export class ListAnswerCommentsUseCase {
   constructor(private answerCommentRepository: AnswerCommentRepository) {}
@@ -20,8 +23,8 @@ export class ListAnswerCommentsUseCase {
   }: ListAnswerCommentsUseCaseRequest): Promise<ListAnswerCommentsUseCaseResponse> {
     const answerComments = await this.answerCommentRepository.findManyByAnswerId(answerId, {page})
 
-    return {
-        answerComments
-    }
+    return right({
+      answerComments
+    })
   }
 }

@@ -3,6 +3,7 @@ import { InMemoryAnswerRepository } from '../../../../../test/repositories-in-me
 import { ChosseQuestionBestAnswerUseCase } from './chosse-question-best-answer'
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'
+import { NotAllowedError } from './errors/not-allowed-error'
 
 let questionsRepository: InMemoryQuestionRepository
 let answerRepository: InMemoryAnswerRepository
@@ -45,11 +46,12 @@ describe('Chosse Question Best Answer', () => {
     await questionsRepository.create(question)
     await answerRepository.create(answer)
 
-    await expect (() => {
-      return chosseQuestionBestAnswerUseCase.execute({
+    const result = await chosseQuestionBestAnswerUseCase.execute({
         answerId: answer.id.toString(),
         authorId: 'author-2'
-      })
-    }).rejects.toBeInstanceOf(Error)
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 })
