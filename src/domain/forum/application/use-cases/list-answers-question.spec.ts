@@ -1,0 +1,48 @@
+import { InMemoryAnswerRepository } from 'test/repositories-in-memory/in-memory-answers-repository'
+import { ListAnswersOfQuestionUseCase } from './list-answers-question'
+import { makeAnswer } from 'test/factories/make-answer'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
+let answersRepository: InMemoryAnswerRepository
+let listAnswersOfQuestionUseCase: ListAnswersOfQuestionUseCase
+
+describe('List Answers of Question', () => {
+  beforeEach(() => {
+    answersRepository = new InMemoryAnswerRepository()
+    listAnswersOfQuestionUseCase = new ListAnswersOfQuestionUseCase(answersRepository)
+  })
+
+  it('should be able to list answers of question', async () => {
+    await answersRepository.create(makeAnswer({
+        questionId: new UniqueEntityID('1')
+    }))
+    await answersRepository.create(makeAnswer({
+        questionId: new UniqueEntityID('1')
+    }))
+    await answersRepository.create(makeAnswer({
+        questionId: new UniqueEntityID('1')
+    }))
+
+    const { answers } = await listAnswersOfQuestionUseCase.execute({
+      questionId: '1',
+      page: 1
+    })
+
+    expect(answers).toHaveLength(3)
+  })
+
+  it('should be able to fetch paginated answers of question', async () => {
+    for(let i = 1; i <= 22; i++){
+      await answersRepository.create(makeAnswer({
+        questionId: new UniqueEntityID('1')
+      }))
+    }
+
+    const { answers } = await listAnswersOfQuestionUseCase.execute({
+      questionId: '1',
+      page: 2
+    })
+
+    expect(answers).toHaveLength(2)
+  })
+})
