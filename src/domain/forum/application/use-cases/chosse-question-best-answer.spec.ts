@@ -4,15 +4,21 @@ import { ChosseQuestionBestAnswerUseCase } from './chosse-question-best-answer'
 import { makeAnswer } from 'test/factories/make-answer'
 import { makeQuestion } from 'test/factories/make-question'
 import { NotAllowedError } from './errors/not-allowed-error'
+import { InMemoryQuestionAttachmentRepository } from 'test/repositories-in-memory/in-memory-question-attachments-repository'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories-in-memory/in-memory-answer-attachments-repository'
 
+let answersAttachmentsRepository: InMemoryAnswerAttachmentRepository;
 let questionsRepository: InMemoryQuestionRepository
 let answerRepository: InMemoryAnswerRepository
+let questionAttachmentRepository: InMemoryQuestionAttachmentRepository
 let chosseQuestionBestAnswerUseCase: ChosseQuestionBestAnswerUseCase
 
 describe('Chosse Question Best Answer', () => {
   beforeEach(() => {
-    questionsRepository = new InMemoryQuestionRepository()
-    answerRepository = new InMemoryAnswerRepository()
+    questionAttachmentRepository = new InMemoryQuestionAttachmentRepository()
+    questionsRepository = new InMemoryQuestionRepository(questionAttachmentRepository)
+    answersAttachmentsRepository = new InMemoryAnswerAttachmentRepository()
+    answerRepository = new InMemoryAnswerRepository(answersAttachmentsRepository)
 
     chosseQuestionBestAnswerUseCase = new ChosseQuestionBestAnswerUseCase(
       questionsRepository, 

@@ -2,13 +2,16 @@ import { InMemoryAnswerRepository } from 'test/repositories-in-memory/in-memory-
 import { ListAnswersOfQuestionUseCase } from './list-answers-question'
 import { makeAnswer } from 'test/factories/make-answer'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories-in-memory/in-memory-answer-attachments-repository';
 
+let answersAttachmentsRepository: InMemoryAnswerAttachmentRepository;
 let answersRepository: InMemoryAnswerRepository
 let listAnswersOfQuestionUseCase: ListAnswersOfQuestionUseCase
 
 describe('List Answers of Question', () => {
   beforeEach(() => {
-    answersRepository = new InMemoryAnswerRepository()
+    answersAttachmentsRepository = new InMemoryAnswerAttachmentRepository()
+    answersRepository = new InMemoryAnswerRepository(answersAttachmentsRepository)
     listAnswersOfQuestionUseCase = new ListAnswersOfQuestionUseCase(answersRepository)
   })
 
