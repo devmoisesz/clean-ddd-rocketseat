@@ -2,7 +2,7 @@ import { InMemoryAnswerRepository } from "../../../../../test/repositories-in-me
 import { DeleteAnswerUseCase } from "./delete-answer";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { makeAnswer } from "test/factories/make-answer";
-import { NotAllowedError } from "./errors/not-allowed-error";
+import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
 import { InMemoryAnswerAttachmentRepository } from "test/repositories-in-memory/in-memory-answer-attachments-repository";
 import { makeAnswerAttachment } from "test/factories/make-answer-attachment";
 
@@ -46,7 +46,7 @@ describe("Delete Answer", () => {
     });
 
     expect(answerRepository.items).toHaveLength(0);
-    expect(answersAttachmentsRepository.items).toHaveLength(0)
+    expect(answersAttachmentsRepository.items).toHaveLength(0);
   });
 
   it("should not be able to delete a answer from another user", async () => {

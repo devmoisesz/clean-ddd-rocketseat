@@ -1,8 +1,8 @@
 import { left, right, type Either } from "@/core/either";
 import type { Answer } from "../../enterprise/entities/answer";
 import type { AnswerRepository } from "../repositories/answers-repository";
-import { ResourceNotFoundError } from "./errors/resource-not-found-error";
-import { NotAllowedError } from "./errors/not-allowed-error";
+import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
+import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
 import { AnswerAttachmentList } from "../../enterprise/answer-attachment-list";
 import type { AnswerAttachmentRepository } from "../repositories/answer-attchments-repository";
 import { AnswerAttachment } from "../../enterprise/entities/answer-attachment";
@@ -25,7 +25,7 @@ type EditAnswerUseCaseResponse = Either<
 export class EditAnswerUseCase {
   constructor(
     private answersRepository: AnswerRepository,
-    private answerAttachmentsRepository: AnswerAttachmentRepository
+    private answerAttachmentsRepository: AnswerAttachmentRepository,
   ) {}
 
   async execute({

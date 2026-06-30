@@ -3,47 +3,47 @@ import type { AnswerRepository } from "../repositories/answers-repository";
 import { AnswerComment } from "../../enterprise/entities/answer-comment";
 import type { AnswerCommentRepository } from "../repositories/answer-comment-repository";
 import { left, right, type Either } from "@/core/either";
-import { ResourceNotFoundError } from "./errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
 
 interface CommentOnAnswerUseCaseRequest {
-  authorId: string,
-  answerId: string
-  content: string
+  authorId: string;
+  answerId: string;
+  content: string;
 }
 type CommentOnAnswerUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    answerComment: AnswerComment
+    answerComment: AnswerComment;
   }
->
+>;
 
 export class CommentOnAnswerUseCase {
   constructor(
     private answersRepository: AnswerRepository,
-    private answerCommentRepository: AnswerCommentRepository
-) {}
+    private answerCommentRepository: AnswerCommentRepository,
+  ) {}
 
   async execute({
     authorId,
     answerId,
-    content
+    content,
   }: CommentOnAnswerUseCaseRequest): Promise<CommentOnAnswerUseCaseResponse> {
-    const answer = await this.answersRepository.findById(answerId)
+    const answer = await this.answersRepository.findById(answerId);
 
-    if(!answer){
-        return left(new ResourceNotFoundError())
+    if (!answer) {
+      return left(new ResourceNotFoundError());
     }
 
     const answerComment = AnswerComment.create({
-        authorId: new UniqueEntityID(authorId),
-        answerId: new UniqueEntityID(answerId),
-        content
-    })
+      authorId: new UniqueEntityID(authorId),
+      answerId: new UniqueEntityID(answerId),
+      content,
+    });
 
-    await this.answerCommentRepository.create(answerComment)
+    await this.answerCommentRepository.create(answerComment);
 
     return right({
-      answerComment
-    })
+      answerComment,
+    });
   }
 }

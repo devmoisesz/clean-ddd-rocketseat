@@ -2,7 +2,7 @@ import { InMemoryQuestionRepository } from "test/repositories-in-memory/in-memor
 import { makeQuestion } from "test/factories/make-question";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { EditQuestionUseCase } from "./edit-question";
-import { NotAllowedError } from "./errors/not-allowed-error";
+import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
 import { InMemoryQuestionAttachmentRepository } from "test/repositories-in-memory/in-memory-question-attachments-repository";
 import { makeQuestionAttachment } from "test/factories/make-question-attachment";
 
@@ -13,7 +13,9 @@ let editQuestionUseCase: EditQuestionUseCase;
 describe("Edit Question", () => {
   beforeEach(() => {
     questionAttachmentRepository = new InMemoryQuestionAttachmentRepository();
-    questionsRepository = new InMemoryQuestionRepository(questionAttachmentRepository);
+    questionsRepository = new InMemoryQuestionRepository(
+      questionAttachmentRepository,
+    );
 
     editQuestionUseCase = new EditQuestionUseCase(
       questionsRepository,
@@ -54,13 +56,11 @@ describe("Edit Question", () => {
       title: "test question",
       content: "test content",
     });
-    expect(
-      questionsRepository.items[0]?.attachments.currentItems
-    ).toHaveLength(2);
+    expect(questionsRepository.items[0]?.attachments.currentItems).toHaveLength(
+      2,
+    );
 
-    expect(
-      questionsRepository.items[0]?.attachments.currentItems
-    ).toEqual([
+    expect(questionsRepository.items[0]?.attachments.currentItems).toEqual([
       expect.objectContaining({ attachmentId: new UniqueEntityID("1") }),
       expect.objectContaining({ attachmentId: new UniqueEntityID("3") }),
     ]);
@@ -81,7 +81,7 @@ describe("Edit Question", () => {
       authorId: "author-2",
       title: "test question",
       content: "test content",
-      attachmentsIds: []
+      attachmentsIds: [],
     });
 
     expect(result.isLeft()).toBe(true);

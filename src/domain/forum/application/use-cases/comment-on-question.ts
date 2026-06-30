@@ -4,47 +4,47 @@ import type { QuestionsRepository } from "../repositories/question-repository";
 import { QuestionComment } from "../../enterprise/entities/question-comment";
 import type { QuestionCommentRepository } from "../repositories/question-comment-repository";
 import { left, right, type Either } from "@/core/either";
-import { ResourceNotFoundError } from "./errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
 
 interface CommentOnQuestionUseCaseRequest {
-  authorId: string,
-  questionId: string
-  content: string
+  authorId: string;
+  questionId: string;
+  content: string;
 }
 type CommentOnQuestionUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    questionComment: QuestionComment
+    questionComment: QuestionComment;
   }
->
+>;
 
 export class CommentOnQuestionUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
-    private questionCommentRepository: QuestionCommentRepository
-) {}
+    private questionCommentRepository: QuestionCommentRepository,
+  ) {}
 
   async execute({
     authorId,
     questionId,
-    content
+    content,
   }: CommentOnQuestionUseCaseRequest): Promise<CommentOnQuestionUseCaseResponse> {
-    const question = await this.questionsRepository.findById(questionId)
+    const question = await this.questionsRepository.findById(questionId);
 
-    if(!question){
-        return left(new ResourceNotFoundError())
+    if (!question) {
+      return left(new ResourceNotFoundError());
     }
 
     const questionComment = QuestionComment.create({
-        authorId: new UniqueEntityID(authorId),
-        questionId: new UniqueEntityID(questionId),
-        content
-    })
+      authorId: new UniqueEntityID(authorId),
+      questionId: new UniqueEntityID(questionId),
+      content,
+    });
 
-    await this.questionCommentRepository.create(questionComment)
+    await this.questionCommentRepository.create(questionComment);
 
     return right({
-      questionComment
-    })
+      questionComment,
+    });
   }
 }

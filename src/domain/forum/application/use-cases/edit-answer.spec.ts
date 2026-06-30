@@ -2,7 +2,7 @@ import { InMemoryAnswerRepository } from "test/repositories-in-memory/in-memory-
 import { makeAnswer } from "test/factories/make-answer";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { EditAnswerUseCase } from "./edit-answer";
-import { NotAllowedError } from "./errors/not-allowed-error";
+import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
 import { InMemoryAnswerAttachmentRepository } from "test/repositories-in-memory/in-memory-answer-attachments-repository";
 import { makeAnswerAttachment } from "test/factories/make-answer-attachment";
 
@@ -13,7 +13,9 @@ let editAnswerUseCase: EditAnswerUseCase;
 describe("Edit Answer", () => {
   beforeEach(() => {
     answerAttachmentsRepository = new InMemoryAnswerAttachmentRepository();
-    answersRepository = new InMemoryAnswerRepository(answerAttachmentsRepository);
+    answersRepository = new InMemoryAnswerRepository(
+      answerAttachmentsRepository,
+    );
     editAnswerUseCase = new EditAnswerUseCase(
       answersRepository,
       answerAttachmentsRepository,
@@ -75,7 +77,7 @@ describe("Edit Answer", () => {
       answerId: newAnswer.id.toValue(),
       authorId: "author-2",
       content: "test content",
-      attachmentsIds: []
+      attachmentsIds: [],
     });
 
     expect(result.isLeft()).toBe(true);
