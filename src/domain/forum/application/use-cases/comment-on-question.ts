@@ -1,5 +1,4 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
-import { Question } from "../../enterprise/entities/question";
 import type { QuestionsRepository } from "../repositories/question-repository";
 import { QuestionComment } from "../../enterprise/entities/question-comment";
 import type { QuestionCommentRepository } from "../repositories/question-comment-repository";

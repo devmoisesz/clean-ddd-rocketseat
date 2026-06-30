@@ -1,48 +1,51 @@
-import type { PaginationParams } from "@/core/repositories/pagination-params"
-import type { AnswerRepository } from "@/domain/forum/application/repositories/answers-repository"
-import type { Answer } from "@/domain/forum/enterprise/entities/answer"
-import type { AnswerAttachmentRepository } from "@/domain/forum/application/repositories/answer-attchments-repository"
-
+import type { PaginationParams } from "@/core/repositories/pagination-params";
+import type { AnswerRepository } from "@/domain/forum/application/repositories/answers-repository";
+import type { Answer } from "@/domain/forum/enterprise/entities/answer";
+import type { AnswerAttachmentRepository } from "@/domain/forum/application/repositories/answer-attchments-repository";
+import { DomainEvents } from "@/core/events/domain-events";
 
 export class InMemoryAnswerRepository implements AnswerRepository {
-    public items: Answer[] = []
+  public items: Answer[] = [];
 
-    constructor(
-        private answerAttachmentsRepository: AnswerAttachmentRepository
-    ){}
+  constructor(
+    private answerAttachmentsRepository: AnswerAttachmentRepository,
+  ) {}
 
-    async findManyByQuestionId(questionId: string, { page }: PaginationParams){
-        const answers = this.items
-            .filter((item) => item.questionId.toString() === questionId)
-            .slice((page - 1) * 20, page * 20)
-        
-        return answers
-    }
+  async findManyByQuestionId(questionId: string, { page }: PaginationParams) {
+    const answers = this.items
+      .filter((item) => item.questionId.toString() === questionId)
+      .slice((page - 1) * 20, page * 20);
 
-    async save(answer: Answer) {
-        const itemIndex = this.items.findIndex((item) => item.id === answer.id)
+    return answers;
+  }
 
-        this.items[itemIndex] = answer
-    }
+  async save(answer: Answer) {
+    const itemIndex = this.items.findIndex((item) => item.id === answer.id);
 
-    async delete(answer: Answer){
-        const itemIndex = this.items.findIndex((item) => item.id === answer.id)
+    this.items[itemIndex] = answer;
 
-        this.items.splice(itemIndex, 1)
+    DomainEvents.dispatchEventsForAggregate(answer.id);
+  }
 
-        this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString())
-    }
+  async delete(answer: Answer) {
+    const itemIndex = this.items.findIndex((item) => item.id === answer.id);
 
-    async findById(id: string) {
-        const answer = this.items.find((item) => item.id.toString() === id)
-        
-        if(!answer) return null
-        
-        return answer
-    }
+    this.items.splice(itemIndex, 1);
 
-    async create(answer: Answer) {
-        this.items.push(answer)
-    }
-    
+    this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString());
+  }
+
+  async findById(id: string) {
+    const answer = this.items.find((item) => item.id.toString() === id);
+
+    if (!answer) return null;
+
+    return answer;
+  }
+
+  async create(answer: Answer) {
+    this.items.push(answer);
+
+    DomainEvents.dispatchEventsForAggregate(answer.id);
+  }
 }

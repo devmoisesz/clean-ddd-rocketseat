@@ -3,7 +3,7 @@ import type { Answer } from "../../enterprise/entities/answer";
 import type { AnswerRepository } from "../repositories/answers-repository";
 import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
-import { AnswerAttachmentList } from "../../enterprise/answer-attachment-list";
+import { AnswerAttachmentList } from "../../../forum/enterprise/entities/answer-attachment-list";
 import type { AnswerAttachmentRepository } from "../repositories/answer-attchments-repository";
 import { AnswerAttachment } from "../../enterprise/entities/answer-attachment";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";

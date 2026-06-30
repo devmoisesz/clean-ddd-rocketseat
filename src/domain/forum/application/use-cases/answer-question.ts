@@ -3,7 +3,7 @@ import type { AnswerRepository } from "../repositories/answers-repository";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 import { right, type Either } from "@/core/either";
 import { AnswerAttachment } from "../../enterprise/entities/answer-attachment";
-import { AnswerAttachmentList } from "../../enterprise/answer-attachment-list";
+import { AnswerAttachmentList } from "../../../forum/enterprise/entities/answer-attachment-list";
 
 interface AnswerQuestionUseCaseRequest {
   instructorId: string;

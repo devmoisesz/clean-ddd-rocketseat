@@ -4,7 +4,7 @@ import type { QuestionsRepository } from "../repositories/question-repository";
 import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/error/errors/not-allowed-error";
 import type { QuestionAttachmentRepository } from "../repositories/question-attchments-repository";
-import { QuestionAttachmentList } from "../../enterprise/question-attachment-list";
+import { QuestionAttachmentList } from "../../../forum/enterprise/entities/question-attachment-list";
 import { QuestionAttachment } from "../../enterprise/entities/question-attachment";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
